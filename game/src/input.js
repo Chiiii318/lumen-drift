@@ -60,6 +60,65 @@ export function createInput(canvas) {
     refreshMove();
   }
 
+  // Touch controls (phones and tablets): the first finger is a floating joystick — drag
+  // and the keeper drifts the way you drag; a second finger aims the lantern and lights
+  // the beam for as long as it is held. A tap counts as a click for the menus.
+  const touches = { move: null, beam: null };
+  function onTouchStart(event) {
+    event.preventDefault();
+    input.pressed.add('enter'); // a tap starts and restarts, like a click
+    for (const t of event.changedTouches) {
+      const p = toField(t);
+      if (touches.move === null) touches.move = { id: t.identifier, sx: p.x, sy: p.y, x: p.x, y: p.y };
+      else if (touches.beam === null) {
+        touches.beam = { id: t.identifier };
+        input.aimX = p.x;
+        input.aimY = p.y;
+        input.beam = true;
+      }
+    }
+  }
+  function onTouchMove(event) {
+    event.preventDefault();
+    for (const t of event.changedTouches) {
+      const p = toField(t);
+      if (touches.move && t.identifier === touches.move.id) {
+        touches.move.x = p.x;
+        touches.move.y = p.y;
+        const dx = p.x - touches.move.sx;
+        const dy = p.y - touches.move.sy;
+        const d = Math.hypot(dx, dy);
+        if (d > 12) {
+          input.moveX = dx / d;
+          input.moveY = dy / d;
+        } else {
+          input.moveX = 0;
+          input.moveY = 0;
+        }
+        input.aimX = p.x;
+        input.aimY = p.y;
+      }
+      if (touches.beam && t.identifier === touches.beam.id) {
+        input.aimX = p.x;
+        input.aimY = p.y;
+      }
+    }
+  }
+  function onTouchEnd(event) {
+    event.preventDefault();
+    for (const t of event.changedTouches) {
+      if (touches.move && t.identifier === touches.move.id) {
+        touches.move = null;
+        input.moveX = 0;
+        input.moveY = 0;
+      }
+      if (touches.beam && t.identifier === touches.beam.id) {
+        touches.beam = null;
+        input.beam = false;
+      }
+    }
+  }
+
   function attach() {
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
@@ -67,6 +126,10 @@ export function createInput(canvas) {
     canvas.addEventListener('mousemove', onMouseMove);
     canvas.addEventListener('mousedown', onMouseDown);
     window.addEventListener('mouseup', onMouseUp);
+    canvas.addEventListener('touchstart', onTouchStart, { passive: false });
+    canvas.addEventListener('touchmove', onTouchMove, { passive: false });
+    canvas.addEventListener('touchend', onTouchEnd, { passive: false });
+    canvas.addEventListener('touchcancel', onTouchEnd, { passive: false });
   }
   function detach() {
     window.removeEventListener('keydown', onKeyDown);
@@ -75,6 +138,10 @@ export function createInput(canvas) {
     canvas.removeEventListener('mousemove', onMouseMove);
     canvas.removeEventListener('mousedown', onMouseDown);
     window.removeEventListener('mouseup', onMouseUp);
+    canvas.removeEventListener('touchstart', onTouchStart);
+    canvas.removeEventListener('touchmove', onTouchMove);
+    canvas.removeEventListener('touchend', onTouchEnd);
+    canvas.removeEventListener('touchcancel', onTouchEnd);
   }
   return input;
 }

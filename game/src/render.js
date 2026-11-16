@@ -272,8 +272,9 @@ function drawTitle(ctx, state, ui) {
   text(ctx, '萤 火 守 夜 人', FIELD.width / 2, 208, 17, COLORS.text, 'center');
   text(ctx, 'The night drinks light. Gather the drifting motes to feed yours,', FIELD.width / 2, 252, 15, COLORS.textDim, 'center', 400);
   text(ctx, 'burn the shadow moths from the dark — and last until dawn.', FIELD.width / 2, 274, 15, COLORS.textDim, 'center', 400);
-  text(ctx, 'WASD / Arrows — drift      Mouse — aim lantern      Hold click — beam', FIELD.width / 2, 316, 14, COLORS.text, 'center');
-  text(ctx, 'Survive 5 waves to see the dawn.  P — pause    M — sound', FIELD.width / 2, 340, 13, COLORS.textDim, 'center', 400);
+  text(ctx, 'WASD / Arrows — drift      Mouse — aim lantern      Hold click — beam', FIELD.width / 2, 312, 14, COLORS.text, 'center');
+  text(ctx, 'Touch: drag to drift, a second finger holds the beam', FIELD.width / 2, 334, 13, COLORS.text, 'center', 400);
+  text(ctx, 'Survive 5 waves to see the dawn.  P — pause    M — sound', FIELD.width / 2, 356, 13, COLORS.textDim, 'center', 400);
   const pulse = 0.75 + 0.25 * Math.sin(state.time * 3.2);
   ctx.globalAlpha = pulse;
   text(ctx, '—  CLICK OR PRESS ENTER TO BEGIN  —', FIELD.width / 2, 388, 16, COLORS.gold, 'center', 700);

@@ -31,6 +31,8 @@ No build step, no network requests, no libraries: plain HTML, CSS and ES modules
 | WASD / Arrow keys | Drift |
 | Mouse | Aim the lantern |
 | Hold left mouse button | Lantern beam (burns moths, drains light faster) |
+| Touch: drag | Drift (floating joystick) |
+| Touch: second finger | Aim and hold the lantern beam |
 | P / Esc | Pause |
 | M | Sound on/off |
 | Enter / Click | Start |
